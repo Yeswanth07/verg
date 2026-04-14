@@ -69,7 +69,7 @@ public class SampleServiceImpl implements SampleService {
     public CustomResponse createSample(JsonNode sampleEntity) {
         log.info("InterestServiceImpl::createInterest:entered the method: " + sampleEntity);
         CustomResponse response = new CustomResponse();
-        payloadValidation.validatePayload(Constants.INTEREST_VALIDATION_FILE_JSON, sampleEntity);
+        payloadValidation.validatePayload(Constants.SAMPLE_VALIDATION_FILE_JSON, sampleEntity);
 
 
         log.debug("InterestServiceImpl::createInterest:validated the payload");
@@ -92,14 +92,14 @@ public class SampleServiceImpl implements SampleService {
             log.info("SampleServiceImpl::createSample::persisted sample in postgres");
             ObjectNode jsonNode = objectMapper.createObjectNode();
             jsonNode.put("SampleID",
-                    sampleEntity.get(Constants.INTEREST_ID_RQST).asText());
+                    sampleEntity.get(Constants.SAMPLE_ID_RQST).asText());
             jsonNode.setAll((ObjectNode) sampleEntity);
             Map<String, Object> map = objectMapper.convertValue(jsonNode, Map.class);
             esUtilService.addDocument(Constants.INTEREST_INDEX_NAME, Constants.INDEX_TYPE,
                     String.valueOf(primaryID), map, vergProperties.getElasticSampleJsonPath());
             cacheService.putCache(primaryID, jsonNode);
             response.setMessage(Constants.SUCCESSFULLY_CREATED);
-            map.put(Constants.INTEREST_ID_RQST, primaryID);
+            map.put(Constants.SAMPLE_ID_RQST, primaryID);
             response.setResult(map);
             response.setResponseCode(HttpStatus.OK);
             log.info("SampleServiceImpl::createSample::persited sample in Verg");
