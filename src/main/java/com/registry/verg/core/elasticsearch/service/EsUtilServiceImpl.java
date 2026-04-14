@@ -45,7 +45,7 @@ public class EsUtilServiceImpl implements ESUtilService {
     private ObjectMapper objectMapper;
 
     @Autowired
-    private VergProperties cbServerProperties;
+    private VergProperties vergServerProperties;
 
     @Autowired
     public EsUtilServiceImpl(ElasticsearchClient elasticsearchClient, EsConfig esConfig) {
@@ -149,9 +149,9 @@ public class EsUtilServiceImpl implements ESUtilService {
     public SearchResult searchDocuments(String esIndexName, SearchCriteria searchCriteria) throws Exception {
         String searchString = searchCriteria.getSearchString();
         if (searchString != null
-                && searchString.length() > cbServerProperties.getSearchStringMaxRegexLength()) {
+                && searchString.length() > vergServerProperties.getSearchStringMaxRegexLength()) {
             throw new RuntimeException("Search string exceeds maximum allowed length of "
-                    + cbServerProperties.getSearchStringMaxRegexLength() + " characters.");
+                    + vergServerProperties.getSearchStringMaxRegexLength() + " characters.");
         }
 
         Query query = buildQuery(searchCriteria);
