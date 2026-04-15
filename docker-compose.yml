@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: verg-postgres
+    environment:
+      POSTGRES_DB: verg_db
+      POSTGRES_USER: verg_user
+      POSTGRES_PASSWORD: verg_password
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    container_name: verg-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+
+  elasticsearch:
+    image: elasticsearch:8.13.0
+    container_name: verg-elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+
+volumes:
+  pgdata:
+  redisdata:
+  esdata:
