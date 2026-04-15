@@ -23,6 +23,7 @@ import com.registry.verg.vergsample.repository.SampleRepository;
 import com.registry.verg.vergsample.service.SampleService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,7 +36,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
+
 
 @Service
 @Slf4j
@@ -60,9 +61,9 @@ public class SampleServiceImpl implements SampleService {
     @Autowired
     private VergProperties vergProperties;
 
-    private Logger logger = (Logger) LoggerFactory.getLogger(SampleServiceImpl.class);
+    private Logger logger = LoggerFactory.getLogger(SampleServiceImpl.class);
 
-    @Value("${search.result.redis.ttl}")
+    @Value("${spring.redis.cacheTtl}")
     private long searchResultRedisTtl;
 
     @Override

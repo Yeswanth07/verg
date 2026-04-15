@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Setter
 public class VergProperties {
 
-        @Value("${search.result.redis.ttl}")
+        @Value("${spring.redis.cacheTtl}")
         private long searchResultRedisTtl;
 
         @Value("${search.string.max.regex.length}")
