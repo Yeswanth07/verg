@@ -12,7 +12,7 @@ public class Constants{
 
     public static final String ERROR = "ERROR";
     public static final String REDIS_KEY_PREFIX = "verg_cache_";
-    
+
     //ES Specific Constants
     public static final String INDEX_TYPE = "_doc";
     public static final String KEYWORD = ".keyword";
@@ -58,6 +58,8 @@ public class Constants{
     public static final String SAMPLE_VALIDATION_FILE_JSON = "/payloadValidation/samplePayloadValidation.json";
     public static final String SAMPLE_ID_RQST = "sampleId";
     public static final String INTEREST_INDEX_NAME = "sampleIndex";
+
+
 
     private Constants() {
     }
