@@ -1,0 +1,55 @@
+{
+  "mappings": {
+    "properties": {
+      "registrationId": { "type": "keyword" },
+      "tagId": { "type": "keyword" },
+      "name": { "type": "text" },
+      "species": { "type": "keyword" },
+      "breed": { "type": "keyword" },
+      "gender": { "type": "keyword" },
+      "dateOfBirth": {
+        "type": "date",
+        "format": "yyyy-MM-dd"
+      },
+      "status": { "type": "keyword" },
+      "ownerId": { "type": "keyword" },
+      "ownerName": { "type": "text" },
+      "farmId": { "type": "keyword" },
+      "farmLocation": {
+        "type": "object",
+        "properties": {
+          "state": { "type": "keyword" },
+          "district": { "type": "keyword" },
+          "village": { "type": "keyword" },
+          "pincode": { "type": "keyword" }
+        }
+      },
+      "vaccinations": {
+        "type": "nested",
+        "properties": {
+          "vaccineName": { "type": "keyword" },
+          "administeredOn": {
+            "type": "date",
+            "format": "yyyy-MM-dd"
+          },
+          "nextDueOn": {
+            "type": "date",
+            "format": "yyyy-MM-dd"
+          },
+          "administeredBy": { "type": "text" }
+        }
+      },
+      "originCountry": { "type": "keyword" },
+      "importPermitId": { "type": "keyword" },
+      "remarks": { "type": "text" },
+      "registeredOn": {
+        "type": "date",
+        "format": "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'||epoch_millis"
+      },
+      "updatedOn": {
+        "type": "date",
+        "format": "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'||epoch_millis"
+      }
+    }
+  }
+}
