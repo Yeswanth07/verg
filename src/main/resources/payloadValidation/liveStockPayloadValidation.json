@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
   "properties": {
-    "registrationId": {
+    "liveStockId": {
       "type": "string",
       "description": "Unique government-issued registration identifier"
     },
@@ -50,29 +50,21 @@
       "type": "string",
       "description": "Registered farm or premises identifier"
     },
-    "farmLocation": {
-      "type": "object",
-      "properties": {
-        "state": { "type": "string" },
-        "district": { "type": "string" },
-        "village": { "type": "string" },
-        "pincode": { "type": "string" }
-      },
-      "required": ["state", "district"]
+    "farmState": {
+      "type": "string",
+      "description": "State where the farm is located"
     },
-    "vaccinations": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "vaccineName": { "type": "string" },
-          "administeredOn": { "type": "string", "format": "date" },
-          "nextDueOn": { "type": "string", "format": "date" },
-          "administeredBy": { "type": "string" }
-        },
-        "required": ["vaccineName", "administeredOn"]
-      },
-      "description": "Vaccination history for compliance"
+    "farmDistrict": {
+      "type": "string",
+      "description": "District where the farm is located"
+    },
+    "farmVillage": {
+      "type": "string",
+      "description": "Village where the farm is located"
+    },
+    "farmPincode": {
+      "type": "string",
+      "description": "Pincode of the farm location"
     },
     "originCountry": {
       "type": "string",
@@ -99,7 +91,7 @@
     }
   },
   "required": [
-    "registrationId",
+    "liveStockId",
     "tagId",
     "species",
     "gender",
@@ -107,7 +99,8 @@
     "ownerId",
     "ownerName",
     "farmId",
-    "farmLocation",
+    "farmState",
+    "farmDistrict",
     "registeredOn"
   ]
 }

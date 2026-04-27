@@ -96,7 +96,7 @@ public class LiveStockServiceImpl implements LiveStockService {
                     liveStockEntity.get(Constants.LIVESTOCK_ID_RQST).asText());
             jsonNode.setAll((ObjectNode) liveStockEntity);
             Map<String, Object> map = objectMapper.convertValue(jsonNode, Map.class);
-            esUtilService.addDocument(Constants.INTEREST_INDEX_NAME, Constants.INDEX_TYPE,
+            esUtilService.addDocument(Constants.LIVESTOCK_INDEX_NAME, Constants.INDEX_TYPE,
                     String.valueOf(primaryID), map, vergProperties.getElasticLiveStockJsonPath());
             cacheService.putCache(primaryID, jsonNode);
             response.setMessage(Constants.SUCCESSFULLY_CREATED);
@@ -134,7 +134,7 @@ public class LiveStockServiceImpl implements LiveStockService {
         }
         try {
             searchResult =
-                    esUtilService.searchDocuments(Constants.INTEREST_INDEX_NAME, searchCriteria);
+                    esUtilService.searchDocuments(Constants.LIVESTOCK_INDEX_NAME, searchCriteria);
             response.getResult().put(Constants.RESULT, searchResult);
             createSuccessResponse(response);
             return response;

@@ -61,9 +61,9 @@ public class Constants{
 
 
     // Livestock Specific Constants
-    public static final String LIVESTOCK_VALIDATION_FILE_JSON = "src/main/resources/payloadValidation/liveStockPayloadValidation.json";
+    public static final String LIVESTOCK_VALIDATION_FILE_JSON = "/payloadValidation/liveStockPayloadValidation.json";
     public static final String LIVESTOCK_ID_RQST = "liveStockId";
-    public static final String LIVESTOCK_INDEX_NAME = "liveStockIndex";
+    public static final String LIVESTOCK_INDEX_NAME = "livestock_index";
 
 
 
