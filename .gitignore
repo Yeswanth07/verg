@@ -31,3 +31,26 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### OS Files ###
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.swo
+*~
+
+### Logs ###
+*.log
+logs/
+
+### Environment ###
+.env
+.env.*
+
+### Test Output ###
+tests/output/
+
+### AI Tooling ###
+.gemini/
+.kiro/

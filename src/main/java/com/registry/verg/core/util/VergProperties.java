@@ -24,4 +24,7 @@ public class VergProperties {
         @Value("${elastic.required.field.livestock.json.path}")
         private String elasticLiveStockJsonPath;
 
+        @Value("${elastic.required.field.crop.json.path}")
+        private String elasticCropJsonPath;
+
 }
