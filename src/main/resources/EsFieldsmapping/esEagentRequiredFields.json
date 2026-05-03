@@ -1,0 +1,5 @@
+{
+    "eagentId": {
+        "type": "keyword"
+    }
+}

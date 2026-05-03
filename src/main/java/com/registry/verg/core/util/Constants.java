@@ -6,6 +6,7 @@ public class Constants{
     public static final String ACTIVE = "ACTIVE";
     public static final String IN_ACTIVE = "INACTIVE";
     public static final String SUCCESSFULLY_CREATED = "successfully created";
+    public static final String SUCCESSFULLY_DELETED = "successfully deleted";
     public static final String RESULT = "result";
     public static final String FAILED_CONST = "FAILED";
     public static final String ID = "id";
@@ -64,14 +65,34 @@ public class Constants{
     public static final String LIVESTOCK_VALIDATION_FILE_JSON = "/payloadValidation/liveStockPayloadValidation.json";
     public static final String LIVESTOCK_ID_RQST = "liveStockId";
     public static final String LIVESTOCK_INDEX_NAME = "livestock_index";
+    
 
     // Crop Specific Constants
     public static final String CROP_VALIDATION_FILE_JSON = "/payloadValidation/cropPayloadValidation.json";
     public static final String CROP_ID_RQST = "cropId";
     public static final String CROP_INDEX_NAME = "crop_index";
 
+    
+    // Seed Specific Constants
+    public static final String SEED_VALIDATION_FILE_JSON = "/payloadValidation/seedPayloadValidation.json";
+    public static final String SEED_ID_RQST = "seedId";
+    public static final String SEED_INDEX_NAME = "seed_index";
 
 
-    private Constants() {
+    
+    // Farmer Specific Constants
+    public static final String FARMER_VALIDATION_FILE_JSON = "/payloadValidation/farmerPayloadValidation.json";
+    public static final String FARMER_ID_RQST = "farmerId";
+    public static final String FARMER_INDEX_NAME = "farmer_index";
+
+
+    
+    // Eagent Specific Constants
+    public static final String EAGENT_VALIDATION_FILE_JSON = "/payloadValidation/eagentPayloadValidation.json";
+    public static final String EAGENT_ID_RQST = "eagentId";
+    public static final String EAGENT_INDEX_NAME = "eagent_index";
+
+
+        private Constants() {
     }
 }

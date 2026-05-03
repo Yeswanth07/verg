@@ -1,41 +1,35 @@
-package com.registry.verg.livestock.controller;
+package com.registry.verg.eagent.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.registry.verg.core.dto.CustomResponse;
 import com.registry.verg.core.elasticsearch.dto.SearchCriteria;
-import com.registry.verg.livestock.service.LiveStockService;
+import com.registry.verg.eagent.service.EagentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/livestock")
-public class LiveStockController {
+@RequestMapping("/eagent")
+public class EagentController {
     @Autowired
-    private LiveStockService liveStockService;
+    private EagentService eagentService;
 
     @PostMapping("/v1/create")
-    public ResponseEntity<CustomResponse> create(@RequestBody JsonNode liveStockDetails) {
-        CustomResponse response = liveStockService.createLiveStock(liveStockDetails);
+    public ResponseEntity<CustomResponse> create(@RequestBody JsonNode eagentDetails) {
+        CustomResponse response = eagentService.createEagent(eagentDetails);
         return new ResponseEntity<>(response, response.getResponseCode());
     }
 
     @PostMapping("/v1/search")
     public ResponseEntity<?> search(@RequestBody SearchCriteria searchCriteria) {
-        CustomResponse response = liveStockService.searchLiveStock(searchCriteria);
+        CustomResponse response = eagentService.searchEagent(searchCriteria);
         return new ResponseEntity<>(response, response.getResponseCode());
     }
 
     @GetMapping("/v1/read/{id}")
     public ResponseEntity<?> read(@PathVariable String id) {
-        CustomResponse response = liveStockService.read(id);
+        CustomResponse response = eagentService.read(id);
         return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
-    @DeleteMapping("/v1/delete/{id}")
-    public ResponseEntity<?> delete(@PathVariable String id) {
-        CustomResponse response = liveStockService.delete(id);
-        return new ResponseEntity<>(response, response.getResponseCode());
     }
 }

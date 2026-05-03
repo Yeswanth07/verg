@@ -1,0 +1,5 @@
+{
+    "farmerId": {
+        "type": "keyword"
+    }
+}

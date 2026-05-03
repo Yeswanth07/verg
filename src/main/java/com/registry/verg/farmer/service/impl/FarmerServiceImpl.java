@@ -1,4 +1,4 @@
-package com.registry.verg.livestock.service.impl;
+package com.registry.verg.farmer.service.impl;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -18,9 +18,9 @@ import com.registry.verg.core.exception.CustomException;
 import com.registry.verg.core.util.Constants;
 import com.registry.verg.core.util.PayloadValidation;
 import com.registry.verg.core.util.VergProperties;
-import com.registry.verg.livestock.repository.LiveStockRepository;
-import com.registry.verg.livestock.service.LiveStockService;
-import com.registry.verg.livestock.entity.LiveStockEntity;
+import com.registry.verg.farmer.entity.FarmerEntity;
+import com.registry.verg.farmer.repository.FarmerRepository;
+import com.registry.verg.farmer.service.FarmerService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -40,12 +40,12 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 @Slf4j
-public class LiveStockServiceImpl implements LiveStockService {
+public class FarmerServiceImpl implements FarmerService {
     @Autowired
     private PayloadValidation payloadValidation;
 
     @Autowired
-    private LiveStockRepository liveStockRepository;
+    private FarmerRepository farmerRepository;
 
     @Autowired
     private ESUtilService esUtilService;
@@ -58,69 +58,68 @@ public class LiveStockServiceImpl implements LiveStockService {
 
     @Autowired
     private RedisTemplate<String, SearchResult> redisTemplate;
+
     @Autowired
     private VergProperties vergProperties;
 
-    private Logger logger = LoggerFactory.getLogger(LiveStockServiceImpl.class);
+    private Logger logger = LoggerFactory.getLogger(FarmerServiceImpl.class);
 
     @Value("${spring.redis.cacheTtl}")
     private long searchResultRedisTtl;
 
     @Override
-    public CustomResponse createLiveStock(JsonNode liveStockEntity) {
-        log.info("InterestServiceImpl::createInterest:entered the method: " + liveStockEntity);
+    public CustomResponse createFarmer(JsonNode farmerEntity) {
+        log.info("FarmerServiceImpl::createFarmer:entered the method: " + farmerEntity);
         CustomResponse response = new CustomResponse();
-        payloadValidation.validatePayload(Constants.LIVESTOCK_VALIDATION_FILE_JSON, liveStockEntity);
+        payloadValidation.validatePayload(Constants.FARMER_VALIDATION_FILE_JSON, farmerEntity);
 
-
-        log.debug("InterestServiceImpl::createInterest:validated the payload");
+        log.debug("FarmerServiceImpl::createFarmer:validated the payload");
         try {
-            log.info("InterestServiceImpl::createInterest:creating interest");
-            LiveStockEntity liveStockEntity1 = new LiveStockEntity();
+            log.info("FarmerServiceImpl::createFarmer:creating farmer");
+            FarmerEntity farmerEntity1 = new FarmerEntity();
             // Generate Primary Key
-            UUID interestIdUuid = Uuids.timeBased();
-            String primaryID = String.valueOf(interestIdUuid);
-            liveStockEntity1.setLiveStockId(primaryID);
+            UUID idUuid = Uuids.timeBased();
+            String primaryID = String.valueOf(idUuid);
+            farmerEntity1.setFarmerId(primaryID);
             // Create Parameters like createdDate / updateDate / Data and Status
             Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-            liveStockEntity1.setCreatedOn(currentTime);
-            liveStockEntity1.setUpdatedOn(currentTime);
-            liveStockEntity1.setStatus(Constants.ACTIVE);
-            liveStockEntity1.setData(liveStockEntity);
+            farmerEntity1.setCreatedOn(currentTime);
+            farmerEntity1.setUpdatedOn(currentTime);
+            farmerEntity1.setStatus(Constants.ACTIVE);
+            farmerEntity1.setData(farmerEntity);
 
-            liveStockRepository.save(liveStockEntity1);
+            farmerRepository.save(farmerEntity1);
 
-            log.info("LiveStockServiceImpl::createLiveStock::persisted livestock in postgres");
+            log.info("FarmerServiceImpl::createFarmer::persisted farmer in postgres");
             ObjectNode jsonNode = objectMapper.createObjectNode();
-            jsonNode.put("LiveStockID",
-                    liveStockEntity.get(Constants.LIVESTOCK_ID_RQST).asText());
-            jsonNode.setAll((ObjectNode) liveStockEntity);
+            jsonNode.put("FarmerID",
+                    farmerEntity.get(Constants.FARMER_ID_RQST).asText());
+            jsonNode.setAll((ObjectNode) farmerEntity);
             Map<String, Object> map = objectMapper.convertValue(jsonNode, Map.class);
-            esUtilService.addDocument(Constants.LIVESTOCK_INDEX_NAME, Constants.INDEX_TYPE,
-                    String.valueOf(primaryID), map, vergProperties.getElasticLiveStockJsonPath());
+            esUtilService.addDocument(Constants.FARMER_INDEX_NAME, Constants.INDEX_TYPE,
+                    String.valueOf(primaryID), map, vergProperties.getElasticFarmerJsonPath());
             cacheService.putCache(primaryID, jsonNode);
             response.setMessage(Constants.SUCCESSFULLY_CREATED);
-            map.put(Constants.LIVESTOCK_ID_RQST, primaryID);
+            map.put(Constants.FARMER_ID_RQST, primaryID);
             response.setResult(map);
             response.setResponseCode(HttpStatus.OK);
-            log.info("LiveStockServiceImpl::createLiveStock::persited livestock in Verg");
+            log.info("FarmerServiceImpl::createFarmer::persisted farmer in Verg");
             return response;
 
         } catch (Exception e) {
-
             throw new CustomException("error while processing", e.getMessage(),
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @Override
-    public CustomResponse searchLiveStock(SearchCriteria searchCriteria) {
-        log.info("LiveStockServiceImpl::searchDemand");
+    public CustomResponse searchFarmer(SearchCriteria searchCriteria) {
+        log.info("FarmerServiceImpl::searchFarmer");
         CustomResponse response = new CustomResponse();
         SearchResult searchResult = redisTemplate.opsForValue()
                 .get(generateRedisJwtTokenKey(searchCriteria));
         if (searchResult != null) {
-            log.info("LiveStockServiceImpl::searchLiveStock: livestock search result fetched from redis");
+            log.info("FarmerServiceImpl::searchFarmer: farmer search result fetched from redis");
             response.getResult().put(Constants.RESULT, searchResult);
             createSuccessResponse(response);
             return response;
@@ -134,7 +133,7 @@ public class LiveStockServiceImpl implements LiveStockService {
         }
         try {
             searchResult =
-                    esUtilService.searchDocuments(Constants.LIVESTOCK_INDEX_NAME, searchCriteria);
+                    esUtilService.searchDocuments(Constants.FARMER_INDEX_NAME, searchCriteria);
             response.getResult().put(Constants.RESULT, searchResult);
             createSuccessResponse(response);
             return response;
@@ -149,16 +148,15 @@ public class LiveStockServiceImpl implements LiveStockService {
     }
 
     @Override
-    public CustomResponse assignLiveStock(JsonNode liveStockEntity, String token) {
+    public CustomResponse assignFarmer(JsonNode farmerEntity, String token) {
         return null;
     }
 
     @Override
     public CustomResponse read(String id) {
-        log.info("InterestServiceImpl::read:inside the method");
+        log.info("FarmerServiceImpl::read:inside the method");
         CustomResponse response = new CustomResponse();
         if (StringUtils.isEmpty(id)) {
-            //logger.error("InterestServiceImpl::read:Id not found");
             response.setResponseCode(HttpStatus.INTERNAL_SERVER_ERROR);
             response.setMessage(Constants.ID_NOT_FOUND);
             return response;
@@ -166,33 +164,31 @@ public class LiveStockServiceImpl implements LiveStockService {
         try {
             String cachedJson = cacheService.getCache(id);
             if (StringUtils.isNotEmpty(cachedJson)) {
-                log.info("InterestServiceImpl::read:Record coming from redis cache");
+                log.info("FarmerServiceImpl::read:Record coming from redis cache");
                 response.setMessage(Constants.SUCCESSFULLY_READING);
                 response
                         .getResult()
                         .put(Constants.RESULT, objectMapper.readValue(cachedJson, new TypeReference<Object>() {
                         }));
             } else {
-                Optional<LiveStockEntity> entityOptional = liveStockRepository.findById(id);
+                Optional<FarmerEntity> entityOptional = farmerRepository.findById(id);
                 if (entityOptional.isPresent()) {
-                    LiveStockEntity liveStockEntity = entityOptional.get();
-                    cacheService.putCache(id, liveStockEntity.getData());
-                    log.info("InterestServiceImpl::read:Record coming from postgres db");
+                    FarmerEntity farmerEntity = entityOptional.get();
+                    cacheService.putCache(id, farmerEntity.getData());
+                    log.info("FarmerServiceImpl::read:Record coming from postgres db");
                     response.setMessage(Constants.SUCCESSFULLY_READING);
                     response
                             .getResult()
                             .put(Constants.RESULT,
                                     objectMapper.convertValue(
-                                            liveStockEntity.getData(), new TypeReference<Object>() {
+                                            farmerEntity.getData(), new TypeReference<Object>() {
                                             }));
                 } else {
-                    //logger.error("Invalid Id: {}", id);
                     response.setResponseCode(HttpStatus.NOT_FOUND);
                     response.setMessage(Constants.INVALID_ID);
                 }
             }
         } catch (Exception e) {
-            //logger.error("Error while mapping JSON for id {}: {}", id, e.getMessage(), e);
             throw new CustomException(Constants.ERROR, "error while processing",
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -201,45 +197,7 @@ public class LiveStockServiceImpl implements LiveStockService {
 
     @Override
     public CustomResponse delete(String id) {
-        log.info("LiveStockServiceImpl::delete: entered the method for id: {}", id);
-        CustomResponse response = new CustomResponse();
-
-        if (StringUtils.isEmpty(id)) {
-            response.setResponseCode(HttpStatus.BAD_REQUEST);
-            response.setMessage(Constants.ID_NOT_FOUND);
-            return response;
-        }
-
-        try {
-            Optional<LiveStockEntity> entityOptional = liveStockRepository.findById(id);
-            if (entityOptional.isEmpty()) {
-                log.warn("LiveStockServiceImpl::delete: No record found for id: {}", id);
-                response.setResponseCode(HttpStatus.NOT_FOUND);
-                response.setMessage(Constants.INVALID_ID);
-                return response;
-            }
-
-            // 1. Delete from PostgreSQL
-            liveStockRepository.deleteById(id);
-            log.info("LiveStockServiceImpl::delete: deleted from Postgres for id: {}", id);
-
-            // 2. Delete from Elasticsearch
-            esUtilService.deleteDocument(id, Constants.LIVESTOCK_INDEX_NAME);
-            log.info("LiveStockServiceImpl::delete: deleted from Elasticsearch for id: {}", id);
-
-            // 3. Delete from Redis cache
-            cacheService.deleteCache(id);
-            log.info("LiveStockServiceImpl::delete: deleted from Redis cache for id: {}", id);
-
-            response.setMessage(Constants.SUCCESSFULLY_DELETED);
-            response.setResponseCode(HttpStatus.OK);
-            response.getResult().put(Constants.ID, id);
-            return response;
-
-        } catch (Exception e) {
-            log.error("LiveStockServiceImpl::delete: error while deleting id: {}", id, e);
-            throw new CustomException(Constants.ERROR, e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return null;
     }
 
     public void createSuccessResponse(CustomResponse response) {
@@ -256,7 +214,7 @@ public class LiveStockServiceImpl implements LiveStockService {
                         .withClaim(Constants.REQUEST_PAYLOAD, reqJsonString)
                         .sign(Algorithm.HMAC256(Constants.JWT_SECRET_KEY));
             } catch (JsonProcessingException e) {
-                //logger.error("Error occurred while converting json object to json string", e);
+                // logger.error("Error occurred while converting json object to json string", e);
             }
         }
         return "";
