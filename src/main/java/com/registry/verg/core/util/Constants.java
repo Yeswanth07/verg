@@ -60,12 +60,6 @@ public class Constants{
     public static final String SAMPLE_ID_RQST = "sampleId";
     public static final String INTEREST_INDEX_NAME = "sampleIndex";
 
-
-    // Livestock Specific Constants
-    public static final String LIVESTOCK_VALIDATION_FILE_JSON = "/payloadValidation/liveStockPayloadValidation.json";
-    public static final String LIVESTOCK_ID_RQST = "liveStockId";
-    public static final String LIVESTOCK_INDEX_NAME = "livestock_index";
-
         private Constants() {
     }
 }
